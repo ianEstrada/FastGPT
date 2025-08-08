@@ -26,8 +26,17 @@ app.add_middleware(
 
 OLLAMA_URL = "http://localhost:11434"
 
+# Obtener directorio actual del script
+script_dir = os.path.dirname(os.path.abspath(__file__))
+static_dir = os.path.join(script_dir, "static")
+
+# Crear directorio static si no existe
+if not os.path.exists(static_dir):
+    os.makedirs(static_dir)
+    print(f"⚠️ Directorio static creado en: {static_dir}")
+
 # Montar carpeta estática para frontend
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 class ChatRequest(BaseModel):
     model: str
@@ -207,7 +216,28 @@ async def get_ollama_status():
 
 @app.get("/")
 async def main():
-    return FileResponse("static/index.html")
+    index_path = os.path.join(static_dir, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
+    else:
+        return HTMLResponse("""
+        <html>
+            <head><title>FastGPT</title></head>
+            <body>
+                <h1>🤖 FastGPT Server</h1>
+                <p>⚠️ Archivo index.html no encontrado en directorio static.</p>
+                <p>📁 Directorio static: {}</p>
+                <p>💡 Coloca tu archivo index.html en el directorio static para ver la interfaz.</p>
+                <hr>
+                <h2>🔗 Endpoints disponibles:</h2>
+                <ul>
+                    <li><a href="/health">📊 /health</a> - Estado del servidor</li>
+                    <li><a href="/api/models">🤖 /api/models</a> - Modelos disponibles</li>
+                    <li><a href="/api/status">🔍 /api/status</a> - Estado de Ollama</li>
+                </ul>
+            </body>
+        </html>
+        """.format(static_dir))
 
 if __name__ == "__main__":
     # Configuración para acceso remoto

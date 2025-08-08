@@ -60,12 +60,18 @@ Un chatbot web moderno y elegante que conecta con Ollama para proporcionar una e
 
 4. **Ejecuta el servidor:**
    ```bash
-   # Opción A: Script automático (recomendado)
+   # Opción A: Script simple (recomendado)
+   start-simple.bat
+   
+   # Opción B: Script completo con ngrok
    start-backend.bat
    
-   # Opción B: Manual
+   # Opción C: Manual desde backend/
    cd backend
    python server.py
+   
+   # Opción D: Manual desde raíz
+   python backend/server.py
    ```
 
 5. **Accede al chatbot:**
@@ -95,12 +101,13 @@ Un chatbot web moderno y elegante que conecta con Ollama para proporcionar una e
 ```
 FastGPT/
 ├── 📁 backend/                 # Servidor Python FastAPI
-│   ├── server.py              # Servidor principal
+│   ├── server.py              # Servidor principal (robusto)
 │   └── static/
 │       └── index.html         # Interfaz local simple
 ├── 📁 frontend/               # Frontend para deploy
 │   └── index.html             # Interfaz completa para Cloudflare
-├── 🚀 start-backend.bat       # Script automático de inicio
+├── ✨ start-simple.bat         # Script simple y rápido
+├── 🚀 start-backend.bat       # Script completo con ngrok
 ├── 📘 DEPLOYMENT_GUIDE.md     # Guía de despliegue completa
 ├── 📖 README.md               # Esta documentación
 └── 📁 venv/                   # Entorno virtual Python

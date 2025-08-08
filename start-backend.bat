@@ -124,6 +124,14 @@ if not exist "server.py" (
 
 echo ✅ Archivo server.py encontrado
 
+REM Verificar que el directorio static existe
+if not exist "static" (
+    echo ❌ Directorio static no encontrado
+    echo 💡 Creando directorio static...
+    mkdir static
+    echo ⚠️  Nota: Necesitarás el archivo index.html en static/
+)
+
 echo.
 echo 🎉 ¡Todo listo! Iniciando FastGPT...
 echo =====================================
