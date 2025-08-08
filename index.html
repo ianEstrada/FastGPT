@@ -534,7 +534,7 @@
 
     <script>
         // Configuration - Change this to your backend URL
-        const API_BASE_URL = 'http://192.168.1.64:8000';
+        const API_BASE_URL = process.env.API_URL || 'http://192.168.1.64:8000';
 
         // 🚀 FastGPT - Chat con Historial Inteligente
         class FastGPTChat {
