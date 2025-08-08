@@ -51,7 +51,7 @@ echo Tu IP local es: %LOCAL_IP%
 echo.
 echo Iniciando servidor FastGPT...
 echo Cambiando a directorio backend...
-cd /d "%~dp0backend"
+cd /d "%~dp0.."
 
 if not exist "server.py" (
     echo ERROR: server.py no encontrado en %cd%

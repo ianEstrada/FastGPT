@@ -533,23 +533,121 @@
     </div>
 
     <script>
-        // Configuration - Change this to your backend URL
-        const API_BASE_URL = process.env.API_URL || 'http://192.168.1.64:8000';
-
         // 🚀 FastGPT - Chat con Historial Inteligente
         class FastGPTChat {
             constructor() {
                 this.chats = this.loadChats();
                 this.currentChatId = null;
                 this.isTyping = false;
-                this.apiBaseUrl = API_BASE_URL;
+                this.config = null;
+                this.apiBaseUrl = null;
                 
                 this.initElements();
-                this.bindEvents();
-                this.initializeChats();
-                this.checkConnection();
+                this.loadConfiguration().then(() => {
+                    this.bindEvents();
+                    this.initializeChats();
+                    this.checkConnection();
+                    this.populateModelSelector();
+                    console.log('✨ FastGPT iniciado correctamente');
+                }).catch(error => {
+                    console.error('Error loading configuration:', error);
+                    this.fallbackConfiguration();
+                    this.bindEvents();
+                    this.initializeChats();
+                    this.checkConnection();
+                });
+            }
+            
+            async loadConfiguration() {
+                try {
+                    const response = await fetch('./assets/config.json');
+                    if (!response.ok) {
+                        throw new Error('Config file not found');
+                    }
+                    this.config = await response.json();
+                    
+                    // Detect environment and set API URL
+                    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                        this.apiBaseUrl = `http://localhost:${this.config.server.port}`;
+                    } else {
+                        // For Cloudflare Pages or other deployments, use environment variable or prompt user
+                        this.apiBaseUrl = this.getApiEndpoint();
+                    }
+                } catch (error) {
+                    throw new Error(`Failed to load configuration: ${error.message}`);
+                }
+            }
+            
+            fallbackConfiguration() {
+                console.warn('⚠️ Using fallback configuration');
+                this.config = {
+                    server: { port: 8000 },
+                    models: {
+                        default: "llama3.1",
+                        mappings: {
+                            "llama3.1": "llama3.1:8b",
+                            "qwen2.5": "qwen2.5:7b"
+                        }
+                    }
+                };
                 
-                console.log('✨ FastGPT iniciado correctamente');
+                // Try to detect local development
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    this.apiBaseUrl = 'http://localhost:8000';
+                } else {
+                    this.apiBaseUrl = this.getApiEndpoint();
+                }
+            }
+            
+            getApiEndpoint() {
+                // Check if there's a stored endpoint
+                const stored = localStorage.getItem('fastgpt_api_endpoint');
+                if (stored) {
+                    return stored;
+                }
+                
+                // Prompt user for API endpoint
+                const endpoint = prompt(
+                    '🔧 Por favor, ingresa la URL de tu servidor FastGPT\n' +
+                    'Ejemplo: http://192.168.1.64:8000 o tu URL de ngrok',
+                    'http://localhost:8000'
+                );
+                
+                if (endpoint) {
+                    localStorage.setItem('fastgpt_api_endpoint', endpoint);
+                    return endpoint;
+                }
+                
+                return 'http://localhost:8000';
+            }
+            
+            populateModelSelector() {
+                if (!this.config) return;
+                
+                this.modelSelect.innerHTML = '';
+                const mappings = this.config.models.mappings;
+                
+                for (const [key, value] of Object.entries(mappings)) {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = this.getModelDisplayName(key);
+                    this.modelSelect.appendChild(option);
+                }
+                
+                // Set default model
+                this.modelSelect.value = this.config.models.default;
+            }
+            
+            getModelDisplayName(modelKey) {
+                const displayNames = {
+                    'llama3.1': '🦙 Llama 3.1',
+                    'qwen2.5': '🔥 Qwen 2.5',
+                    'llama2': '🦙 Llama 2',
+                    'mistral': '⚡ Mistral',
+                    'codellama': '👨‍💻 CodeLlama',
+                    'neural-chat': '🧠 Neural Chat'
+                };
+                return displayNames[modelKey] || `🤖 ${modelKey.toUpperCase()}`;
             }
 
             initElements() {

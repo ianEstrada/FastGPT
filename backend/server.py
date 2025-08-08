@@ -12,6 +12,27 @@ import asyncio
 from datetime import datetime
 from typing import Optional, List
 
+# Cargar configuración
+script_dir = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(script_dir, "config.json")
+
+try:
+    with open(config_path, 'r', encoding='utf-8') as f:
+        config = json.load(f)
+except FileNotFoundError:
+    print("⚠️ config.json no encontrado, usando configuración por defecto")
+    config = {
+        "server": {"host": "0.0.0.0", "port": 8000, "reload": False, "access_log": True},
+        "ollama": {"url": "http://localhost:11434", "timeout": 120, "max_retries": 3},
+        "chat": {"max_context_messages": 10, "default_temperature": 0.7, "default_max_tokens": 2000},
+        "models": {
+            "default": "llama3.1",
+            "mappings": {
+                "llama3.1": "llama3.1:8b",
+                "qwen2.5": "qwen2.5:7b"
+            }
+        }
+    }
 
 app = FastAPI(title="Fast GPT Chatbot", description="Chatbot con Ollama para acceso remoto")
 
@@ -24,7 +45,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-OLLAMA_URL = "http://localhost:11434"
+OLLAMA_URL = config["ollama"]["url"]
 
 # Obtener directorio actual del script
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -55,10 +76,7 @@ class StreamChatRequest(BaseModel):
 @app.post("/api/chat")
 async def chat_endpoint(data: ChatRequest):
     """Endpoint de chat optimizado con soporte para contexto"""
-    model_map = {
-        "llama3.1": "llama3.1:8b",
-        "qwen2.5": "qwen2.5:7b",
-    }
+    model_map = config["models"]["mappings"]
     actual_model = model_map.get(data.model, data.model)
     
     # Construir prompt con contexto si existe
@@ -107,10 +125,7 @@ async def chat_endpoint(data: ChatRequest):
 @app.post("/api/chat/stream")
 async def chat_stream_endpoint(data: StreamChatRequest):
     """Endpoint de chat con streaming para respuestas en tiempo real"""
-    model_map = {
-        "llama3.1": "llama3.1:8b",
-        "qwen2.5": "qwen2.5:7b",
-    }
+    model_map = config["models"]["mappings"]
     actual_model = model_map.get(data.model, data.model)
     
     # Construir prompt con contexto
@@ -242,15 +257,17 @@ async def main():
 if __name__ == "__main__":
     # Configuración para acceso remoto
     import uvicorn
+    server_config = config["server"]
+    
     print("🚀 Iniciando Fast GPT Chatbot Server...")
-    print("📱 Acceso desde teléfono: http://192.168.1.64:8000")
-    print("💻 Acceso local: http://localhost:8000")
+    print(f"📱 Acceso desde teléfono: http://192.168.1.64:{server_config['port']}")
+    print(f"💻 Acceso local: http://localhost:{server_config['port']}")
     print("🛑 Presiona Ctrl+C para detener el servidor\n")
     
     uvicorn.run(
         app,  # Usar la instancia directa en lugar del string
-        host="0.0.0.0",  # Escucha en todas las interfaces
-        port=8000,
-        reload=False,  # Desactivar reload para evitar problemas
-        access_log=True
+        host=server_config["host"],
+        port=server_config["port"],
+        reload=server_config["reload"],
+        access_log=server_config["access_log"]
     )

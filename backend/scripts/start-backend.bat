@@ -112,7 +112,7 @@ if "%USE_NGROK%"=="true" (
 echo.
 echo 🎯 Iniciando servidor FastGPT...
 echo 📁 Cambiando a directorio backend...
-cd /d "C:\Users\Lightning\Documents\FastGPT\backend"
+cd /d "%~dp0.."
 
 REM Verificar que el archivo server.py existe
 if not exist "server.py" (
