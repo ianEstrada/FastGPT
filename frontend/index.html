@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FastGPT - Tu Asistente IA</title>
+    <title>Fast GPT - Tu Asistente IA Personal</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -14,60 +15,131 @@
             box-sizing: border-box;
         }
 
+        :root {
+            /* Light theme variables */
+            --bg-primary: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-primary: #e2e8f0;
+            --border-secondary: #cbd5e1;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #1d4ed8;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        [data-theme="dark"] {
+            /* Dark theme variables */
+            --bg-primary: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-primary: #334155;
+            --border-secondary: #475569;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #2563eb;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.4);
+        }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+            background: var(--bg-primary);
+            color: var(--text-primary);
             height: 100vh;
             display: flex;
             overflow: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* Sidebar */
         .sidebar {
             width: 300px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-primary);
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, width 0.3s ease;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .sidebar.hidden {
+            width: 0;
+            overflow: hidden;
         }
 
         .sidebar-header {
-            padding: 28px 24px;
-            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+            padding: 24px;
+            border-bottom: 1px solid var(--border-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .sidebar-header h2 {
-            font-size: 1.3rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 16px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
+        .sidebar-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .theme-toggle, .sidebar-toggle {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-primary);
+            color: var(--text-primary);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover, .sidebar-toggle:hover {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
         .new-chat-btn {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            background: var(--accent-gradient);
             color: white;
             border: none;
-            padding: 14px 20px;
-            border-radius: 16px;
+            padding: 12px 16px;
+            border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             width: 100%;
             font-size: 0.9rem;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+            box-shadow: var(--shadow-md);
+            margin-top: 16px;
         }
 
         .new-chat-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
+            background: var(--accent-secondary);
+            box-shadow: var(--shadow-lg);
         }
 
         .chats-list {
@@ -76,34 +148,86 @@
             padding: 16px 24px;
         }
 
+        .chats-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chats-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chats-list::-webkit-scrollbar-thumb {
+            background: var(--border-secondary);
+            border-radius: 3px;
+        }
+
         .chat-item {
-            padding: 16px;
-            margin-bottom: 12px;
-            border-radius: 16px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(99, 102, 241, 0.05);
-            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-primary);
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .chat-item:hover {
-            background: rgba(99, 102, 241, 0.1);
-            transform: translateX(6px);
-            border-color: rgba(99, 102, 241, 0.2);
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
         }
 
         .chat-item.active {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            background: var(--accent-gradient);
             color: white;
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
-            transform: translateX(6px);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .chat-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-item-actions {
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .chat-item:hover .chat-item-actions {
+            opacity: 1;
+        }
+
+        .delete-chat-btn {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .delete-chat-btn:hover {
+            background: #ef4444;
+            color: white;
         }
 
         .chat-title {
             font-weight: 600;
-            font-size: 0.95rem;
-            margin-bottom: 6px;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -118,33 +242,37 @@
         }
 
         .chat-time {
-            position: absolute;
-            top: 12px;
-            right: 16px;
             font-size: 0.7rem;
-            opacity: 0.5;
+            opacity: 0.6;
             font-weight: 500;
+            margin-top: 2px;
         }
 
         /* Main Chat Area */
         .main-container {
             flex: 1;
-            background: white;
+            background: var(--bg-secondary);
             display: flex;
             flex-direction: column;
-            margin: 20px 20px 20px 0;
-            border-radius: 32px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            margin: 16px 16px 16px 0;
+            border-radius: 12px;
+            box-shadow: var(--shadow-xl);
             overflow: hidden;
+            border: 1px solid var(--border-primary);
+        }
+
+        .main-container.full-width {
+            margin-left: 16px;
         }
 
         .header {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            background: var(--accent-gradient);
             color: white;
-            padding: 24px 32px;
+            padding: 20px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            border-bottom: 1px solid var(--border-primary);
         }
 
         .header-left {
@@ -154,11 +282,30 @@
         }
 
         .header h1 {
-            font-size: 1.5rem;
-            font-weight: 800;
+            font-size: 1.3rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 12px;
+        }
+
+        .sidebar-toggle-main {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-toggle-main:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .status-dot {
@@ -171,11 +318,11 @@
         }
 
         .model-selector {
-            background: rgba(255,255,255,0.15);
-            border: 2px solid rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
-            padding: 12px 20px;
-            border-radius: 16px;
+            padding: 8px 16px;
+            border-radius: 8px;
             font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
@@ -183,23 +330,23 @@
         }
 
         .model-selector:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .model-selector option {
-            background: #6366f1;
+            background: var(--accent-primary);
             color: white;
             font-weight: 600;
         }
 
         .messages {
             flex: 1;
-            padding: 32px;
+            padding: 24px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            background: linear-gradient(180deg, #fafbff 0%, #ffffff 100%);
+            gap: 16px;
+            background: var(--bg-tertiary);
         }
 
         .messages::-webkit-scrollbar {
@@ -211,69 +358,69 @@
         }
 
         .messages::-webkit-scrollbar-thumb {
-            background: rgba(99, 102, 241, 0.3);
-            border-radius: 10px;
+            background: var(--border-secondary);
+            border-radius: 3px;
         }
 
         .message {
             max-width: 75%;
-            padding: 16px 24px;
-            border-radius: 24px;
-            font-size: 0.95rem;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 0.9rem;
             line-height: 1.6;
-            animation: slideIn 0.4s ease;
+            animation: slideIn 0.3s ease;
             position: relative;
+            box-shadow: var(--shadow-sm);
         }
 
         .message.user {
             align-self: flex-end;
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            background: var(--accent-gradient);
             color: white;
-            border-bottom-right-radius: 8px;
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+            border-bottom-right-radius: 4px;
         }
 
         .message.bot {
             align-self: flex-start;
-            background: white;
-            color: #374151;
-            border: 2px solid rgba(99, 102, 241, 0.1);
-            border-bottom-left-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-primary);
+            border-bottom-left-radius: 4px;
         }
 
         .input-area {
-            padding: 24px 32px 32px;
-            background: linear-gradient(180deg, #ffffff 0%, #fafbff 100%);
-            border-top: 1px solid rgba(99, 102, 241, 0.1);
+            padding: 20px 24px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-primary);
         }
 
         .input-form {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             align-items: flex-end;
-            background: white;
-            border: 2px solid rgba(99, 102, 241, 0.1);
-            border-radius: 24px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-primary);
+            border-radius: 12px;
             padding: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
         }
 
         .input-form:focus-within {
-            border-color: #6366f1;
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-md);
         }
 
         .input-form textarea {
             flex: 1;
             border: none;
-            padding: 16px 20px;
-            font-size: 1rem;
+            padding: 12px 16px;
+            font-size: 0.9rem;
             font-family: inherit;
             resize: none;
             max-height: 120px;
             background: transparent;
+            color: var(--text-primary);
             font-weight: 500;
         }
 
@@ -282,27 +429,30 @@
         }
 
         .input-form textarea::placeholder {
-            color: #9ca3af;
+            color: var(--text-muted);
             font-weight: 500;
         }
 
         .send-btn {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            background: var(--accent-gradient);
             border: none;
             color: white;
-            width: 56px;
-            height: 56px;
-            border-radius: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1.3rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            font-size: 16px;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .send-btn:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+            background: var(--accent-secondary);
+            box-shadow: var(--shadow-md);
         }
 
         .send-btn:disabled {
@@ -313,17 +463,17 @@
 
         .typing {
             align-self: flex-start;
-            background: white;
-            border: 2px solid rgba(99, 102, 241, 0.1);
-            padding: 16px 24px;
-            border-radius: 24px;
-            border-bottom-left-radius: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            padding: 12px 16px;
+            border-radius: 12px;
+            border-bottom-left-radius: 4px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            color: #6b7280;
+            gap: 8px;
+            color: var(--text-secondary);
             font-style: italic;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-sm);
         }
 
         .typing-dots {
@@ -332,9 +482,9 @@
         }
 
         .typing-dot {
-            width: 8px;
-            height: 8px;
-            background: #6366f1;
+            width: 6px;
+            height: 6px;
+            background: var(--accent-primary);
             border-radius: 50%;
             animation: bounce 1.4s infinite;
         }
@@ -354,63 +504,44 @@
         }
 
         .empty-state-icon {
-            font-size: 4rem;
+            font-size: 3rem;
             margin-bottom: 24px;
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--accent-primary);
         }
 
         .empty-state h2 {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            color: #374151;
+            color: var(--text-primary);
             margin-bottom: 12px;
         }
 
         .empty-state p {
-            color: #6b7280;
-            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-size: 1rem;
             line-height: 1.6;
             font-weight: 500;
         }
 
-        .connection-error {
-            background: rgba(239, 68, 68, 0.1);
-            color: #dc2626;
-            padding: 16px 24px;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            border-left: 4px solid #dc2626;
-        }
-
         /* Mobile Responsive */
-        .sidebar.mobile-hidden {
-            transform: translateX(-100%);
-        }
-
-        .toggle-sidebar {
-            display: none;
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            padding: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-
         @media (max-width: 768px) {
             .sidebar {
                 position: absolute;
                 z-index: 1000;
                 height: 100%;
+                width: 300px !important; /* Forzar ancho en móviles */
                 transform: translateX(-100%);
+                transition: transform 0.3s ease;
             }
             
             .sidebar.show {
                 transform: translateX(0);
+            }
+            
+            /* En móviles, ignorar la clase hidden */
+            .sidebar.hidden {
+                width: 300px !important;
+                overflow: visible !important;
             }
             
             .main-container {
@@ -418,9 +549,6 @@
                 border-radius: 24px;
             }
             
-            .toggle-sidebar {
-                display: block;
-            }
             
             .header {
                 padding: 20px 24px;
@@ -458,19 +586,19 @@
                 transform: translateY(0); 
             }
             30% { 
-                transform: translateY(-12px); 
+                transform: translateY(-8px); 
             }
         }
 
         @keyframes pulse {
             0% {
-                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
             }
             70% {
-                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+                box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
             }
             100% {
-                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
             }
         }
     </style>
@@ -479,39 +607,40 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h2>💬 Mis Chats</h2>
-            <button class="new-chat-btn" id="newChatBtn">
-                ✨ Nuevo Chat
-            </button>
+            <h2>Mis Chats</h2>
+            <div class="sidebar-controls">
+                <button class="theme-toggle" id="themeToggle" title="Cambiar tema">🌙</button>
+                <button class="sidebar-toggle" id="sidebarToggle" title="Ocultar panel">←</button>
+            </div>
         </div>
         <div class="chats-list" id="chatsList">
             <!-- Chat items will be populated here -->
         </div>
+        <button class="new-chat-btn" id="newChatBtn">
+            Nuevo Chat
+        </button>
     </div>
 
     <!-- Main Chat Area -->
-    <div class="main-container">
+    <div class="main-container" id="mainContainer">
         <div class="header">
             <div class="header-left">
-                <button class="toggle-sidebar" id="toggleSidebar">☰</button>
+                <button class="sidebar-toggle-main" id="sidebarToggleMain" title="Mostrar/Ocultar panel">☰</button>
                 <h1>
-                    🤖 FastGPT
-                    <div class="status-dot" id="statusDot"></div>
+                    FastGPT
+                    <div class="status-dot"></div>
                 </h1>
             </div>
             <select class="model-selector" id="modelSelect">
-                <option value="llama3.1">🦙 Llama 3.1</option>
-                <option value="qwen2.5">🔥 Qwen 2.5</option>
+                <option value="llama3.1">Llama 3.1</option>
+                <option value="qwen2.5">Qwen 2.5</option>
             </select>
         </div>
 
         <div class="messages" id="messages">
-            <div class="connection-error" id="connectionError" style="display: none;">
-                ⚠️ No se pudo conectar con el servidor. Por favor, configura tu API endpoint.
-            </div>
             <div class="empty-state">
-                <div class="empty-state-icon">🚀</div>
-                <h2>¡Hola! Soy FastGPT</h2>
+                <div class="empty-state-icon">💬</div>
+                <h2>Hola! Soy FastGPT</h2>
                 <p>Tu asistente de inteligencia artificial personal.<br>
                    ¿En qué puedo ayudarte hoy?</p>
             </div>
@@ -526,128 +655,27 @@
                     required
                 ></textarea>
                 <button type="submit" class="send-btn" id="sendBtn" disabled>
-                    ➤
+                    →
                 </button>
             </form>
         </div>
     </div>
 
     <script>
-        // 🚀 FastGPT - Chat con Historial Inteligente
+        // FastGPT - Chat con Historial Inteligente
         class FastGPTChat {
             constructor() {
                 this.chats = this.loadChats();
                 this.currentChatId = null;
                 this.isTyping = false;
-                this.config = null;
-                this.apiBaseUrl = null;
+                this.isDarkMode = localStorage.getItem('fastgpt_theme') === 'dark';
                 
                 this.initElements();
-                this.loadConfiguration().then(() => {
-                    this.bindEvents();
-                    this.initializeChats();
-                    this.checkConnection();
-                    this.populateModelSelector();
-                    console.log('✨ FastGPT iniciado correctamente');
-                }).catch(error => {
-                    console.error('Error loading configuration:', error);
-                    this.fallbackConfiguration();
-                    this.bindEvents();
-                    this.initializeChats();
-                    this.checkConnection();
-                });
-            }
-            
-            async loadConfiguration() {
-                try {
-                    const response = await fetch('./assets/config.json');
-                    if (!response.ok) {
-                        throw new Error('Config file not found');
-                    }
-                    this.config = await response.json();
-                    
-                    // Detect environment and set API URL
-                    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                        this.apiBaseUrl = `http://localhost:${this.config.server.port}`;
-                    } else {
-                        // For Cloudflare Pages or other deployments, use environment variable or prompt user
-                        this.apiBaseUrl = this.getApiEndpoint();
-                    }
-                } catch (error) {
-                    throw new Error(`Failed to load configuration: ${error.message}`);
-                }
-            }
-            
-            fallbackConfiguration() {
-                console.warn('⚠️ Using fallback configuration');
-                this.config = {
-                    server: { port: 8000 },
-                    models: {
-                        default: "llama3.1",
-                        mappings: {
-                            "llama3.1": "llama3.1:8b",
-                            "qwen2.5": "qwen2.5:7b"
-                        }
-                    }
-                };
+                this.bindEvents();
+                this.initializeChats();
+                this.initializeTheme();
                 
-                // Try to detect local development
-                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                    this.apiBaseUrl = 'http://localhost:8000';
-                } else {
-                    this.apiBaseUrl = this.getApiEndpoint();
-                }
-            }
-            
-            getApiEndpoint() {
-                // Check if there's a stored endpoint
-                const stored = localStorage.getItem('fastgpt_api_endpoint');
-                if (stored) {
-                    return stored;
-                }
-                
-                // Prompt user for API endpoint
-                const endpoint = prompt(
-                    '🔧 Por favor, ingresa la URL de tu servidor FastGPT\n' +
-                    'Ejemplo: http://192.168.1.64:8000 o tu URL de ngrok',
-                    'http://localhost:8000'
-                );
-                
-                if (endpoint) {
-                    localStorage.setItem('fastgpt_api_endpoint', endpoint);
-                    return endpoint;
-                }
-                
-                return 'http://localhost:8000';
-            }
-            
-            populateModelSelector() {
-                if (!this.config) return;
-                
-                this.modelSelect.innerHTML = '';
-                const mappings = this.config.models.mappings;
-                
-                for (const [key, value] of Object.entries(mappings)) {
-                    const option = document.createElement('option');
-                    option.value = key;
-                    option.textContent = this.getModelDisplayName(key);
-                    this.modelSelect.appendChild(option);
-                }
-                
-                // Set default model
-                this.modelSelect.value = this.config.models.default;
-            }
-            
-            getModelDisplayName(modelKey) {
-                const displayNames = {
-                    'llama3.1': '🦙 Llama 3.1',
-                    'qwen2.5': '🔥 Qwen 2.5',
-                    'llama2': '🦙 Llama 2',
-                    'mistral': '⚡ Mistral',
-                    'codellama': '👨‍💻 CodeLlama',
-                    'neural-chat': '🧠 Neural Chat'
-                };
-                return displayNames[modelKey] || `🤖 ${modelKey.toUpperCase()}`;
+                console.log('FastGPT iniciado correctamente');
             }
 
             initElements() {
@@ -659,29 +687,10 @@
                 this.chatForm = document.getElementById('chatForm');
                 this.modelSelect = document.getElementById('modelSelect');
                 this.newChatBtn = document.getElementById('newChatBtn');
-                this.toggleSidebar = document.getElementById('toggleSidebar');
-                this.statusDot = document.getElementById('statusDot');
-                this.connectionError = document.getElementById('connectionError');
-            }
-
-            async checkConnection() {
-                try {
-                    const response = await fetch(`${this.apiBaseUrl}/health`, {
-                        method: 'GET',
-                        headers: { 'Content-Type': 'application/json' }
-                    });
-                    
-                    if (response.ok) {
-                        this.statusDot.style.background = '#10b981';
-                        this.connectionError.style.display = 'none';
-                    } else {
-                        throw new Error('Server not responding');
-                    }
-                } catch (error) {
-                    this.statusDot.style.background = '#ef4444';
-                    this.connectionError.style.display = 'block';
-                    console.warn('⚠️ No connection to backend:', error);
-                }
+                this.sidebarToggle = document.getElementById('sidebarToggle');
+                this.sidebarToggleMain = document.getElementById('sidebarToggleMain');
+                this.themeToggle = document.getElementById('themeToggle');
+                this.mainContainer = document.getElementById('mainContainer');
             }
 
             bindEvents() {
@@ -708,7 +717,19 @@
 
                 // Chat management
                 this.newChatBtn.addEventListener('click', () => this.createNewChat());
-                this.toggleSidebar.addEventListener('click', () => this.toggleSidebarVisibility());
+                this.sidebarToggle.addEventListener('click', () => this.hideSidebarPermanent());
+                this.sidebarToggleMain.addEventListener('click', () => this.toggleSidebarVisibility());
+                this.themeToggle.addEventListener('click', () => this.toggleTheme());
+                
+                // Click fuera del sidebar para cerrarlo en móviles
+                document.addEventListener('click', (e) => {
+                    if (window.innerWidth <= 768 && 
+                        this.sidebar.classList.contains('show') &&
+                        !this.sidebar.contains(e.target) &&
+                        !this.sidebarToggleMain.contains(e.target)) {
+                        this.hideSidebar();
+                    }
+                });
 
                 // Responsive
                 window.addEventListener('resize', () => this.handleResize());
@@ -730,8 +751,9 @@
                 this.renderChats();
                 this.renderMessages();
                 
+                // En móviles, cerrar el sidebar después de crear un chat
                 if (window.innerWidth <= 768) {
-                    this.hideSidebar();
+                    setTimeout(() => this.hideSidebar(), 100);
                 }
             }
 
@@ -740,9 +762,30 @@
                 this.renderChats();
                 this.renderMessages();
                 
+                // En móviles, cerrar el sidebar después de cambiar de chat
                 if (window.innerWidth <= 768) {
-                    this.hideSidebar();
+                    setTimeout(() => this.hideSidebar(), 100);
                 }
+            }
+
+            deleteChat(chatId, event) {
+                event.stopPropagation();
+                
+                if (this.chats.length <= 1) return; // Keep at least one chat
+                
+                if (!confirm('¿Estás seguro de que quieres eliminar este chat?')) {
+                    return;
+                }
+                
+                this.chats = this.chats.filter(c => c.id !== chatId);
+                
+                if (this.currentChatId === chatId) {
+                    this.currentChatId = this.chats[0]?.id || this.createNewChat();
+                }
+                
+                this.saveChats();
+                this.renderChats();
+                this.renderMessages();
             }
 
             // Rendering
@@ -760,16 +803,31 @@
                     });
                     
                     chatItem.innerHTML = `
-                        <div class="chat-time">${timeStr}</div>
-                        <div class="chat-title">${this.escapeHtml(chat.title)}</div>
-                        <div class="chat-preview">${
-                            lastMessage 
-                                ? this.escapeHtml(this.truncate(lastMessage.content, 60))
-                                : 'Chat vacío'
-                        }</div>
+                        <div class="chat-item-content">
+                            <div class="chat-title">${this.escapeHtml(chat.title)}</div>
+                            <div class="chat-preview">${
+                                lastMessage 
+                                    ? this.escapeHtml(this.truncate(lastMessage.content, 40))
+                                    : 'Chat vacío'
+                            }</div>
+                            <div class="chat-time">${timeStr}</div>
+                        </div>
+                        <div class="chat-item-actions">
+                            <button class="delete-chat-btn" onclick="chatApp.deleteChat('${chat.id}', event)" title="Eliminar chat">×</button>
+                        </div>
                     `;
                     
                     chatItem.addEventListener('click', () => this.switchToChat(chat.id));
+                    
+                    // Double-click to rename (simple implementation)
+                    chatItem.addEventListener('dblclick', () => {
+                        const newTitle = prompt('Nuevo nombre para el chat:', chat.title);
+                        if (newTitle && newTitle.trim()) {
+                            chat.title = newTitle.trim();
+                            this.saveChats();
+                            this.renderChats();
+                        }
+                    });
                     
                     this.chatsList.appendChild(chatItem);
                 });
@@ -777,12 +835,6 @@
 
             renderMessages() {
                 this.messagesDiv.innerHTML = '';
-                
-                // Always show connection error if needed
-                if (this.statusDot.style.background === '#ef4444') {
-                    this.messagesDiv.appendChild(this.connectionError);
-                    this.connectionError.style.display = 'block';
-                }
                 
                 const currentChat = this.getCurrentChat();
                 if (!currentChat) return;
@@ -800,15 +852,14 @@
             }
 
             showEmptyState() {
-                const emptyState = document.createElement('div');
-                emptyState.className = 'empty-state';
-                emptyState.innerHTML = `
-                    <div class="empty-state-icon">🚀</div>
-                    <h2>¡Hola! Soy FastGPT</h2>
-                    <p>Tu asistente de inteligencia artificial personal.<br>
-                       ¿En qué puedo ayudarte hoy?</p>
+                this.messagesDiv.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">💬</div>
+                        <h2>Hola! Soy FastGPT</h2>
+                        <p>Tu asistente de inteligencia artificial personal.<br>
+                           ¿En qué puedo ayudarte hoy?</p>
+                    </div>
                 `;
-                this.messagesDiv.appendChild(emptyState);
             }
 
             // Message Handling
@@ -845,7 +896,7 @@
                         content: msg.content
                     }));
 
-                    const response = await fetch(`${this.apiBaseUrl}/api/chat`, {
+                    const response = await fetch('/api/chat', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -866,19 +917,11 @@
                     this.addMessageToUI(reply, 'bot');
                     this.addMessageToChat(reply, 'assistant');
 
-                    // Update connection status
-                    this.statusDot.style.background = '#10b981';
-                    this.connectionError.style.display = 'none';
-
                 } catch (error) {
                     this.hideTyping();
-                    const errorMsg = `❌ Error: ${error.message}`;
+                    const errorMsg = `Error: ${error.message}`;
                     this.addMessageToUI(errorMsg, 'bot');
                     this.addMessageToChat(errorMsg, 'assistant');
-                    
-                    // Update connection status
-                    this.statusDot.style.background = '#ef4444';
-                    this.connectionError.style.display = 'block';
                 } finally {
                     this.isTyping = false;
                     this.updateSendButton();
@@ -972,9 +1015,48 @@
                 }, 100);
             }
 
-            // Responsive
+            // Theme Management
+            initializeTheme() {
+                if (this.isDarkMode) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    this.themeToggle.textContent = '☀️';
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                    this.themeToggle.textContent = '🌙';
+                }
+            }
+
+            toggleTheme() {
+                this.isDarkMode = !this.isDarkMode;
+                localStorage.setItem('fastgpt_theme', this.isDarkMode ? 'dark' : 'light');
+                this.initializeTheme();
+            }
+
+            // Sidebar Management
             toggleSidebarVisibility() {
-                this.sidebar.classList.toggle('show');
+                if (window.innerWidth <= 768) {
+                    // En móviles, solo manejamos la clase 'show'
+                    this.sidebar.classList.toggle('show');
+                    // Asegurarnos de que no tenga la clase 'hidden' en móviles
+                    this.sidebar.classList.remove('hidden');
+                } else {
+                    // En desktop, manejamos 'hidden' y 'full-width'
+                    this.sidebar.classList.remove('show'); // Limpiar clase móvil
+                    this.sidebar.classList.toggle('hidden');
+                    this.mainContainer.classList.toggle('full-width');
+                }
+            }
+
+            hideSidebarPermanent() {
+                if (window.innerWidth <= 768) {
+                    // En móviles, solo removemos 'show'
+                    this.sidebar.classList.remove('show');
+                } else {
+                    // En desktop, usamos 'hidden'
+                    this.sidebar.classList.add('hidden');
+                    this.mainContainer.classList.add('full-width');
+                    this.sidebar.classList.remove('show'); // Limpiar clase móvil
+                }
             }
 
             hideSidebar() {
@@ -983,7 +1065,13 @@
 
             handleResize() {
                 if (window.innerWidth > 768) {
+                    // Al cambiar a desktop, limpiar clases móviles
                     this.sidebar.classList.remove('show');
+                    // Mantener el estado de 'hidden' si estaba oculto
+                } else {
+                    // Al cambiar a móvil, limpiar clases desktop
+                    this.sidebar.classList.remove('hidden');
+                    this.mainContainer.classList.remove('full-width');
                 }
             }
 
@@ -1038,8 +1126,9 @@
         }
 
         // Initialize the app
+        let chatApp;
         document.addEventListener('DOMContentLoaded', () => {
-            new FastGPTChat();
+            chatApp = new FastGPTChat();
         });
     </script>
 </body>
