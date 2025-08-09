@@ -105,7 +105,11 @@ class FastGPTChatbot {
     // Load available models
     async loadModels() {
         try {
-            const response = await fetch(this.config.modelsUrl);
+        const response = await fetch(this.config.modelsUrl, {
+            headers: {
+                'ngrok-skip-browser-warning': 'true'
+            }
+        });
             const data = await response.json();
             
             if (data.models && Array.isArray(data.models)) {
@@ -155,7 +159,11 @@ class FastGPTChatbot {
     // Check Ollama connection status
     async checkStatus() {
         try {
-            const response = await fetch(this.config.statusUrl);
+            const response = await fetch(this.config.statusUrl, {
+                headers: {
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
             const data = await response.json();
             
             this.state.isConnected = data.status === 'connected';
@@ -396,7 +404,8 @@ class FastGPTChatbot {
         const response = await fetch(this.config.apiUrl, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true'
             },
             body: JSON.stringify(payload)
         });

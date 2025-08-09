@@ -1,5 +1,0 @@
-# Redirects for Cloudflare Pages
-# API proxy with proper headers
-/api/* https://2b9641dc627a.ngrok-free.app/api/:splat 200!
-# Fallback for SPA
-/* /index.html 200

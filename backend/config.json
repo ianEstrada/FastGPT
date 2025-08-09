@@ -36,7 +36,7 @@
     },
     "cors": {
         "allowed_origins": [
-            "https://2b9641dc627a.ngrok-free.app",
+            "https://898b42793847.ngrok-free.app",
             "http://localhost:3000",
             "http://127.0.0.1:3000",
             "*"
@@ -46,7 +46,7 @@
         "allow_credentials": true
     },
     "ngrok": {
-        "url": "https://2b9641dc627a.ngrok-free.app",
+        "url": "https://898b42793847.ngrok-free.app",
         "enabled": true
     }
 }
