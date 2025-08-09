@@ -896,15 +896,34 @@
                         content: msg.content
                     }));
 
-                    const response = await fetch('/api/chat', {
+                    // Configuración dinámica de API URL
+                    const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                        ? '/api/chat' // Usar proxy local en desarrollo
+                        : 'https://2b9641dc627a.ngrok-free.app/api/chat'; // URL directa de ngrok
+                    
+                    const response = await fetch(apiUrl, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'ngrok-skip-browser-warning': 'true' // Omitir warning de ngrok
+                        },
                         body: JSON.stringify({
                             model: this.modelSelect.value,
                             prompt: message,
                             context: context
                         })
                     });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const contentType = response.headers.get('content-type');
+                    if (!contentType || !contentType.includes('application/json')) {
+                        const textResponse = await response.text();
+                        throw new Error(`Respuesta no válida del servidor: ${textResponse.substring(0, 200)}`);
+                    }
 
                     const data = await response.json();
                     this.hideTyping();

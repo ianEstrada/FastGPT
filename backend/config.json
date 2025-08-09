@@ -33,5 +33,20 @@
         "auto_scroll": true,
         "show_timestamps": true,
         "theme": "default"
+    },
+    "cors": {
+        "allowed_origins": [
+            "https://2b9641dc627a.ngrok-free.app",
+            "http://localhost:3000",
+            "http://127.0.0.1:3000",
+            "*"
+        ],
+        "allowed_methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allowed_headers": ["Content-Type", "Authorization", "Accept", "ngrok-skip-browser-warning"],
+        "allow_credentials": true
+    },
+    "ngrok": {
+        "url": "https://2b9641dc627a.ngrok-free.app",
+        "enabled": true
     }
 }
